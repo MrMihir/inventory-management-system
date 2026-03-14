@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=360,initial-scale=1">
+  <title>StockPilot – Smart Inventory Control</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="icons.js"></script>
+</head>
+
+<body>
+  <div class="device">
+
+    <!-- ═══════════════ SPLASH ═══════════════ -->
+    <div class="screen active" id="splash">
+      <div class="sp-logo" id="spLogo"></div>
+      <div class="sp-name">StockPilot</div>
+      <div class="sp-tag">Smart Inventory Control</div>
+      <div class="sp-bar">
+        <div class="sp-fill" id="splashFill"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ LOGIN ═══════════════ -->
+    <div class="screen" id="login">
+      <div class="login-top">
+        <div class="login-logo" id="loginLogo"></div>
+        <div style="color:#fff;font-size:22px;font-weight:800">Welcome Back</div>
+        <div style="color:rgba(255,255,255,.7);font-size:13px;margin-top:4px">Sign in to manage your inventory</div>
+      </div>
+      <div class="login-body">
+        <div class="f-group">
+          <label>Email Address</label>
+          <div class="ig">
+            <span class="ii" id="mailIco"></span>
+            <input id="loginEmail" type="email" placeholder="you@company.com" value="manager@stockpilot.com">
+          </div>
+          <div class="err-txt" id="emailErr">Please enter a valid email.</div>
+        </div>
+        <div class="f-group">
+          <label>Password</label>
+          <div class="ig">
+            <span class="ii" id="lockIco"></span>
+            <input id="loginPass" type="password" placeholder="Enter your password" value="demo1234">
+            <button class="ia" id="eyeToggle" onclick="togglePass()"></button>
+          </div>
+          <div class="err-txt" id="passErr">Password must be at least 6 characters.</div>
+        </div>
+        <div class="forgotten" onclick="openOtpModal()">Forgot password?</div>
+        <button class="btn btn-primary" id="loginBtn" onclick="doLogin()"></button>
+        <div class="divider">or</div>
+        <div class="link-row">Don't have an account? <span onclick="go('dashboard')">Sign Up</span></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <div class="screen" id="dashboard">
+      <div class="sb">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2">
+            <rect x="1" y="6" width="18" height="12" rx="1" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg> 100%
+        </div>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding-bottom:80px">
+        <div class="dash-top">
+          <div class="dash-row" style="margin-bottom:8px">
+            <div>
+              <div class="dash-greet">Good morning,</div>
+              <div class="dash-name">Rahul Sharma</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="iBtn" onclick="showToast('3 new notifications')">
+                <span id="bellIco"></span>
+                <div class="nbadge">3</div>
+              </button>
+              <button class="iBtn" onclick="go('profile')"><span id="userIcoD"></span></button>
+            </div>
+          </div>
+          <div class="dash-meta"><span id="calIco"></span> Sat, 14 Mar 2026 · Warehouse A</div>
+        </div>
+
+        <div style="padding:14px 0 0">
+          <div class="sec">
+            <div class="sec-t">Overview</div>
+          </div>
+          <div class="kpi-g">
+            <div class="card kpi" onclick="go('products')">
+              <div class="kpi-icon" style="background:#EFF6FF" id="kpiBoxIco"></div>
+              <div class="kpi-val" id="kpi-total">6</div>
+              <div class="kpi-lbl">Total Products</div>
+              <span class="badge bi">+12 this week</span>
+            </div>
+            <div class="card kpi" onclick="go('products');filterChip('Low Stock')">
+              <div class="kpi-icon" style="background:#FEF3C7" id="kpiAlertIco"></div>
+              <div class="kpi-val" id="kpi-low">2</div>
+              <div class="kpi-lbl">Low Stock Items</div>
+              <span class="badge bd">Action needed</span>
+            </div>
+            <div class="card kpi" onclick="go('operations');switchTab('receipts')">
+              <div class="kpi-icon" style="background:#DCFCE7" id="kpiInboxIco"></div>
+              <div class="kpi-val" id="kpi-rec">3</div>
+              <div class="kpi-lbl">Pending Receipts</div>
+              <span class="badge bw">Due today</span>
+            </div>
+            <div class="card kpi" onclick="go('operations');switchTab('deliveries')">
+              <div class="kpi-icon" style="background:#FEE2E2" id="kpiTruckIco"></div>
+              <div class="kpi-val" id="kpi-del">3</div>
+              <div class="kpi-lbl">Pending Deliveries</div>
+              <span class="badge bd">1 overdue</span>
+            </div>
+          </div>
+          <div class="card kpi-wide" onclick="go('operations');switchTab('transfers')">
+            <div class="kpi-icon" style="background:#F3E8FF" id="kpiTransIco"></div>
+            <div style="flex:1">
+              <div class="kpi-val" id="kpi-trans">2</div>
+              <div class="kpi-lbl">Internal Transfers Pending</div>
+            </div>
+            <span class="badge bi">View all</span>
+          </div>
+
+          <div class="sec">
+            <div class="sec-t">Quick Actions</div>
+          </div>
+          <div class="qa-g">
+            <button class="qa" onclick="go('addprod')">
+              <div class="qa-icon" style="background:#EFF6FF" id="qaAddIco"></div>
+              <span class="qa-lbl">Add Product</span>
+            </button>
+            <button class="qa" onclick="go('operations');switchTab('receipts');setTimeout(openNewReceiptModal,200)">
+              <div class="qa-icon" style="background:#DCFCE7" id="qaReceiptIco"></div>
+              <span class="qa-lbl">Create Receipt</span>
+            </button>
+            <button class="qa" onclick="go('operations');switchTab('deliveries');setTimeout(openNewDeliveryModal,200)">
+              <div class="qa-icon" style="background:#FEF3C7" id="qaDelivIco"></div>
+              <span class="qa-lbl">New Delivery</span>
+            </button>
+          </div>
+
+          <div class="sec">
+            <div class="sec-t">Recent Activity</div>
+          </div>
+          <div class="act-list">
+            <div class="act">
+              <div class="act-dot" style="background:var(--success)"></div>
+              <div style="flex:1">
+                <div class="act-t">Receipt REC-2041 Validated</div>
+                <div class="act-s">Supplier: Acme Corp · 240 units</div>
+              </div>
+              <div class="act-time">2h ago</div>
+            </div>
+            <div class="act">
+              <div class="act-dot" style="background:var(--warn)"></div>
+              <div style="flex:1">
+                <div class="act-t">Low Stock Alert: AA Batteries</div>
+                <div class="act-s">Only 12 units remaining</div>
+              </div>
+              <div class="act-time">4h ago</div>
+            </div>
+            <div class="act">
+              <div class="act-dot" style="background:var(--p)"></div>
+              <div style="flex:1">
+                <div class="act-t">Transfer INT-0093 Completed</div>
+                <div class="act-s">Zone A → Zone B · 50 units</div>
+              </div>
+              <div class="act-time">6h ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ PRODUCTS ═══════════════ -->
+    <div class="screen" id="products">
+      <div class="sb">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2">
+            <rect x="1" y="6" width="18" height="12" rx="1" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg> 100%
+        </div>
+      </div>
+      <div class="hero page-hero">
+        <h2>Products</h2>
+        <p id="prodSubtitle">6 items across 2 warehouses</p>
+      </div>
+      <div class="search-wrap">
+        <div class="search-box">
+          <span id="searchIco"></span>
+          <input id="prodSearch" placeholder="Search by name, SKU, category…" oninput="searchProducts(this.value)">
+          <span id="slidersIco" style="cursor:pointer;color:var(--p)"></span>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip active" data-cat="All" onclick="filterChip('All')">All</div>
+        <div class="chip" data-cat="Electronics" onclick="filterChip('Electronics')">Electronics</div>
+        <div class="chip" data-cat="Hardware" onclick="filterChip('Hardware')">Hardware</div>
+        <div class="chip" data-cat="Low Stock" onclick="filterChip('Low Stock')">Low Stock</div>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding-bottom:80px">
+        <div class="prod-list" id="prodList"></div>
+      </div>
+      <button class="fab" id="fabBtn" onclick="go('addprod')"></button>
+    </div>
+
+    <!-- ═══════════════ ADD PRODUCT ═══════════════ -->
+    <div class="screen" id="addprod">
+      <div class="sub-hdr">
+        <div class="back-btn" id="backBtnIco" onclick="go('products')"></div>
+        <h2>Add New Product</h2>
+      </div>
+      <div id="saveToast" class="toast-success">
+        <span id="saveToastIco"></span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--success)">Product Saved!</div>
+          <div style="font-size:11px;color:var(--muted)">Redirecting to products…</div>
+        </div>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding-bottom:30px">
+        <div class="f-card">
+          <label class="f-lbl">Product Name *</label>
+          <input class="f-inp" id="ap-name" placeholder="e.g. Wireless Headset Pro">
+        </div>
+        <div class="f-card">
+          <label class="f-lbl">SKU Code *</label>
+          <input class="f-inp" id="ap-sku" placeholder="e.g. WH-PRO-001">
+        </div>
+        <div class="f-card">
+          <div class="f-row2">
+            <div>
+              <label class="f-lbl">Category</label>
+              <select class="f-inp" id="ap-cat">
+                <option>Electronics</option>
+                <option>Hardware</option>
+                <option>Apparel</option>
+                <option>Consumables</option>
+              </select>
+            </div>
+            <div>
+              <label class="f-lbl">Unit of Measure</label>
+              <select class="f-inp" id="ap-uom">
+                <option>Units</option>
+                <option>kg</option>
+                <option>Liters</option>
+                <option>Boxes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="f-card">
+          <label class="f-lbl">Initial Stock Quantity</label>
+          <input class="f-inp" id="ap-stock" type="number" placeholder="0" min="0">
+        </div>
+        <div class="f-card">
+          <label class="f-lbl">Warehouse Location</label>
+          <select class="f-inp" id="ap-loc">
+            <option>Zone A – Warehouse 1</option>
+            <option>Zone B – Warehouse 1</option>
+            <option>Zone C – Warehouse 2</option>
+          </select>
+        </div>
+        <div class="f-footer">
+          <button class="btn btn-primary" id="saveProdBtn" onclick="saveProduct()"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ OPERATIONS ═══════════════ -->
+    <div class="screen" id="operations">
+      <div class="sb">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2">
+            <rect x="1" y="6" width="18" height="12" rx="1" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg> 100%
+        </div>
+      </div>
+      <div class="hero page-hero">
+        <h2>Operations</h2>
+        <p>Receipts · Deliveries · Transfers · Adjustments</p>
+      </div>
+      <div class="ops-tabs">
+        <div class="tab active" data-tab="receipts" onclick="switchTab('receipts')"><span id="tabInboxIco"></span>
+          Receipts</div>
+        <div class="tab" data-tab="deliveries" onclick="switchTab('deliveries')"><span id="tabTruckIco"></span> Delivery
+        </div>
+        <div class="tab" data-tab="transfers" onclick="switchTab('transfers')"><span id="tabTransIco"></span> Transfer
+        </div>
+        <div class="tab" data-tab="adjustments" onclick="switchTab('adjustments')"><span id="tabAdjIco"></span> Adjust
+        </div>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:14px 14px 80px">
+        <div class="tab-panel active" id="tab-receipts"></div>
+        <div class="tab-panel" id="tab-deliveries"></div>
+        <div class="tab-panel" id="tab-transfers"></div>
+        <div class="tab-panel" id="tab-adjustments"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SETTINGS ═══════════════ -->
+    <div class="screen" id="settings">
+      <div class="sb">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2">
+            <rect x="1" y="6" width="18" height="12" rx="1" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg> 100%
+        </div>
+      </div>
+      <div class="hero page-hero">
+        <h2>Settings</h2>
+        <p>Manage preferences &amp; warehouses</p>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:14px 14px 80px">
+        <div class="sg">
+          <div class="sg-t">Warehouse Management</div>
+          <div id="whList"></div>
+          <div class="si" onclick="openAddWhModal()">
+            <div class="si-ico" style="background:#DCFCE7" id="setAddIco"></div>
+            <span class="si-lbl">Add New Warehouse</span>
+            <span style="color:var(--muted)" id="setChevAdd"></span>
+          </div>
+          <div class="si" onclick="showToast('Zones & Locations coming soon')">
+            <div class="si-ico" style="background:#FEF3C7" id="setPinIco"></div>
+            <span class="si-lbl">Zones &amp; Locations</span>
+            <span style="color:var(--muted)" id="setChevZone"></span>
+          </div>
+        </div>
+        <div class="sg">
+          <div class="sg-t">Notifications</div>
+          <div class="si">
+            <div class="si-ico" style="background:#FEE2E2" id="setBellIco"></div>
+            <span class="si-lbl">Low Stock Alerts</span>
+            <div class="toggle on" id="tog-lowStock" onclick="toggleNotif('lowStock')"></div>
+          </div>
+          <div class="si">
+            <div class="si-ico" style="background:#F3E8FF" id="setInboxIco"></div>
+            <span class="si-lbl">Receipt Notifications</span>
+            <div class="toggle on" id="tog-receipts" onclick="toggleNotif('receipts')"></div>
+          </div>
+          <div class="si">
+            <div class="si-ico" style="background:#FEF3C7" id="setTruckIco"></div>
+            <span class="si-lbl">Delivery Reminders</span>
+            <div class="toggle" id="tog-delivery" onclick="toggleNotif('delivery')"></div>
+          </div>
+        </div>
+        <div class="sg">
+          <div class="sg-t">System</div>
+          <div class="si" onclick="showToast('Language settings coming soon')">
+            <div class="si-ico" style="background:#EFF6FF" id="setGlobeIco"></div>
+            <span class="si-lbl">Language &amp; Region</span>
+            <span class="si-val">English</span>
+          </div>
+          <div class="si" onclick="showToast('Security settings coming soon')">
+            <div class="si-ico" style="background:#DCFCE7" id="setShieldIco"></div>
+            <span class="si-lbl">Security &amp; Privacy</span>
+            <span style="color:var(--muted)" id="setChevSec"></span>
+          </div>
+          <div class="si">
+            <div class="si-ico" style="background:#F3E8FF" id="setInfoIco"></div>
+            <span class="si-lbl">App Version</span>
+            <span class="si-val">2.4.1 · Latest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ PROFILE ═══════════════ -->
+    <div class="screen" id="profile">
+      <div class="sb">
+        <span>9:41</span>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+          <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2">
+            <rect x="1" y="6" width="18" height="12" rx="1" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg> 100%
+        </div>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding-bottom:80px">
+        <div class="prof-hero">
+          <div class="prof-av" id="profAvIco"></div>
+          <div class="prof-name" id="profName">Rahul Sharma</div>
+          <div class="prof-role" id="profRole">Inventory Manager · Warehouse A</div>
+          <div class="prof-stats">
+            <div class="pstat">
+              <div class="pstat-n">342</div>
+              <div class="pstat-l">Orders</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-n">98%</div>
+              <div class="pstat-l">Accuracy</div>
+            </div>
+            <div class="pstat">
+              <div class="pstat-n">2.4k</div>
+              <div class="pstat-l">Items</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:16px 14px 0;margin-top:-14px;display:flex;flex-direction:column;gap:10px">
+          <div class="pc">
+            <div class="pc-t">Account</div>
+            <div class="pi" onclick="openEditProfile()">
+              <div class="pi-ico" style="background:#EFF6FF" id="profUserIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">Rahul Sharma</div>
+                <div class="pi-s">Full Name</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev1"></span>
+            </div>
+            <div class="pi" onclick="openEditProfile()">
+              <div class="pi-ico" style="background:#DCFCE7" id="profMailIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">rahul@stockpilot.com</div>
+                <div class="pi-s">Email</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev2"></span>
+            </div>
+            <div class="pi" onclick="openEditProfile()">
+              <div class="pi-ico" style="background:#FEF3C7" id="profPhoneIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">+91 98765 43210</div>
+                <div class="pi-s">Phone</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev3"></span>
+            </div>
+          </div>
+          <div class="pc">
+            <div class="pi" onclick="go('settings')">
+              <div class="pi-ico" style="background:#F3E8FF" id="profSetIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">Settings</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev4"></span>
+            </div>
+            <div class="pi" onclick="openOtpModal()">
+              <div class="pi-ico" style="background:#EFF6FF" id="profLockIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">Change Password</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev5"></span>
+            </div>
+            <div class="pi" onclick="showToast('Help & Support coming soon')">
+              <div class="pi-ico" style="background:#DCFCE7" id="profHelpIco"></div>
+              <div style="flex:1">
+                <div class="pi-t">Help &amp; Support</div>
+              </div>
+              <span style="color:var(--muted)" id="profChev6"></span>
+            </div>
+          </div>
+          <button class="btn btn-danger" onclick="go('login')" id="logoutBtn"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ BOTTOM NAV ═══════════════ -->
+    <nav class="bnav" id="bnav">
+      <div class="bnav-inner">
+        <div class="nav-item active" id="ni-dashboard" onclick="go('dashboard')">
+          <span id="navHome"></span><span class="nav-lbl">Dashboard</span>
+        </div>
+        <div class="nav-item" id="ni-products" onclick="go('products')">
+          <span id="navBox"></span><span class="nav-lbl">Products</span>
+        </div>
+        <div class="nav-item" id="ni-operations" onclick="go('operations')">
+          <span id="navList"></span><span class="nav-lbl">Operations</span>
+        </div>
+        <div class="nav-item" id="ni-settings" onclick="go('settings')">
+          <span id="navSettings"></span><span class="nav-lbl">Settings</span>
+        </div>
+        <div class="nav-item" id="ni-profile" onclick="go('profile')">
+          <span id="navUser"></span><span class="nav-lbl">Profile</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══════════════ OTP MODAL ═══════════════ -->
+    <div class="modal-bg" id="otpModal" onclick="if(event.target===this)closeOtpModal()">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeOtpModal()" id="otpCloseBtn"></button>
+        <div class="modal-title">Reset Password</div>
+        <div class="modal-sub">Enter the 6-digit OTP sent to your registered email address.</div>
+        <div class="otp-row">
+          <input class="otp-b" maxlength="1" type="text">
+          <input class="otp-b" maxlength="1" type="text">
+          <input class="otp-b" maxlength="1" type="text">
+          <input class="otp-b" maxlength="1" type="text">
+          <input class="otp-b" maxlength="1" type="text">
+          <input class="otp-b" maxlength="1" type="text">
+        </div>
+        <button class="btn btn-primary" id="verifyOtpBtn" onclick="verifyOtp()"></button>
+        <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:14px">
+          Didn't receive? <span style="color:var(--p);font-weight:600;cursor:pointer"
+            onclick="showToast('OTP resent!')">Resend OTP</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════ PRODUCT DETAIL MODAL ═══════════════ -->
+    <div class="modal-bg" id="pdModal" onclick="if(event.target===this)closeProductModal()">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeProductModal()" id="pdCloseBtn"></button>
+        <div id="pdContent"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ GENERIC MODAL ═══════════════ -->
+    <div class="modal-bg" id="genericModal" onclick="if(event.target===this)closeGenericModal()">
+      <div class="modal" id="genericModalContent"></div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="app.js"></script>
+    <script>
+      // ── Inject SVG icons after DOM + icons.js loaded ──────────────
+      function injectIcons() {
+        const s = (id, name, sz, col) => { const el = document.getElementById(id); if (el) el.innerHTML = ic(name, sz, col); };
+        // Splash
+        s('spLogo', 'box', 52, '#fff');
+        // Login
+        s('loginLogo', 'box', 34, '#fff');
+        s('mailIco', 'mail', 18, '#94A3B8');
+        s('lockIco', 'lock', 18, '#94A3B8');
+        s('eyeToggle', 'eye', 18, '#94A3B8');
+        document.getElementById('loginBtn').innerHTML = ic('check', 16) + 'Sign In';
+        // Dashboard
+        s('bellIco', 'bell', 18, '#fff');
+        s('userIcoD', 'user', 18, '#fff');
+        s('calIco', 'calendar', 12, 'rgba(255,255,255,.6)');
+        s('kpiBoxIco', 'box', 22, '#2563EB');
+        s('kpiAlertIco', 'alert', 22, '#D97706');
+        s('kpiInboxIco', 'inbox', 22, '#16A34A');
+        s('kpiTruckIco', 'truck', 22, '#DC2626');
+        s('kpiTransIco', 'transfer', 22, '#7C3AED');
+        s('qaAddIco', 'plus', 24, '#2563EB');
+        s('qaReceiptIco', 'inbox', 24, '#16A34A');
+        s('qaDelivIco', 'truck', 24, '#D97706');
+        // Products
+        s('searchIco', 'search', 18, '#94A3B8');
+        s('slidersIco', 'sliders', 18, '#2563EB');
+        s('fabBtn', 'plus', 26, '#fff');
+        // Add Product
+        s('backBtnIco', 'chevLeft', 20, '#1E293B');
+        s('saveProdBtn', 'box', 16); document.getElementById('saveProdBtn').innerHTML += ` Save Product`;
+        s('saveToastIco', 'check', 20, '#16A34A');
+        // Ops tabs
+        s('tabInboxIco', 'inbox', 14, 'currentColor');
+        s('tabTruckIco', 'truck', 14, 'currentColor');
+        s('tabTransIco', 'transfer', 14, 'currentColor');
+        s('tabAdjIco', 'barchart', 14, 'currentColor');
+        // Settings
+        s('setAddIco', 'plus', 18, '#16A34A');
+        s('setPinIco', 'pin', 18, '#D97706');
+        s('setBellIco', 'bell', 18, '#DC2626');
+        s('setInboxIco', 'inbox', 18, '#7C3AED');
+        s('setTruckIco', 'truck', 18, '#D97706');
+        s('setGlobeIco', 'globe', 18, '#2563EB');
+        s('setShieldIco', 'shield', 18, '#16A34A');
+        s('setInfoIco', 'info', 18, '#7C3AED');
+        s('setChevAdd', 'chevRight', 16, '#94A3B8');
+        s('setChevZone', 'chevRight', 16, '#94A3B8');
+        s('setChevSec', 'chevRight', 16, '#94A3B8');
+        // Profile
+        s('profAvIco', 'user', 40, '#fff');
+        s('profUserIco', 'user', 18, '#2563EB');
+        s('profMailIco', 'mail', 18, '#16A34A');
+        s('profPhoneIco', 'phone', 18, '#D97706');
+        s('profSetIco', 'settings', 18, '#7C3AED');
+        s('profLockIco', 'lock', 18, '#2563EB');
+        s('profHelpIco', 'help', 18, '#16A34A');
+        ['profChev1', 'profChev2', 'profChev3', 'profChev4', 'profChev5', 'profChev6'].forEach(id => s(id, 'chevRight', 16, '#94A3B8'));
+        document.getElementById('logoutBtn').innerHTML = ic('logout', 16) + '  Logout';
+        // OTP modal
+        s('otpCloseBtn', 'x', 16, '#94A3B8');
+        document.getElementById('verifyOtpBtn').innerHTML = ic('check', 16) + 'Verify OTP';
+        // Pd modal close
+        s('pdCloseBtn', 'x', 16, '#94A3B8');
+        // Nav
+        s('navHome', 'home', 22, 'currentColor');
+        s('navBox', 'box', 22, 'currentColor');
+        s('navList', 'list', 22, 'currentColor');
+        s('navSettings', 'settings', 22, 'currentColor');
+        s('navUser', 'user', 22, 'currentColor');
+      }
+      document.addEventListener('DOMContentLoaded', injectIcons);
+    </script>
+</body>
+
+</html>
