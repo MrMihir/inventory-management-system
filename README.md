@@ -1,6 +1,6 @@
-# inventory-management-system
+# STOCK PILOT inventory-management-system
 
-A modular Inventory Management System that helps businesses track, manage, and update stock in real time through a centralized digital platform. It replaces manual inventory tracking methods and improves efficiency, accuracy, and stock visibility.
+StockPilot – A mobile Inventory Management System that digitizes warehouse operations including product tracking, receipts, deliveries, transfers, and stock adjustments.
 
 Features:
 - Add products
@@ -9,7 +9,7 @@ Features:
 - Dashboard
 
 Tech Stack:
-- Frontend: HTML, CSS,bootstrap,javascript
+- Frontend: HTML, CSS, bootstrap, javascript
 - Backend: Node.js,withexp.js
 - Database: sqlight
 
