@@ -9,9 +9,9 @@ Features:
 - Dashboard
 
 Tech Stack:
-Frontend: React
-Backend: Node.js
-Database: MongoDB
+- Frontend: HTML CSS
+- Backend: Node.js
+- Database: MongoDB
 
 Team Members:
 - Arjun Gohil
