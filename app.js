@@ -1,4 +1,4 @@
-// ── DATA ──────────────────────────────────────────────
+// ── DATA stock ──────────────────────────────────────────────
 let products = [
   { id: 1, name: 'Laptop Pro 15"', sku: 'LP-PRO-002', cat: 'Electronics', uom: 'Units', stock: 142, loc: 'Zone A-12', icon: 'box', color: '#EFF6FF', iconColor: '#2563EB' },
   { id: 2, name: 'AA Batteries (48-Pack)', sku: 'BAT-AA-48', cat: 'Hardware', uom: 'Pack', stock: 12, loc: 'Zone B-04', icon: 'layers', color: '#FEF3C7', iconColor: '#D97706' },
